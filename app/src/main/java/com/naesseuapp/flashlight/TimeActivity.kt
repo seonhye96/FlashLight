@@ -1,4 +1,8 @@
 package com.naesseuapp.flashlight
 
-class TimeActivity {
+import android.content.Context
+
+class TimeActivity (context: Context) {
+
+
 }
