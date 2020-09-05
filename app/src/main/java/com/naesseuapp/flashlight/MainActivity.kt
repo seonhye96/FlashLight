@@ -1,18 +1,17 @@
 package com.naesseuapp.flashlight
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.graphics.toColor
-import androidx.core.view.isInvisible
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import com.azeesoft.lib.colorpicker.ColorPickerDialog
 import kotlinx.android.synthetic.main.activity_main.*
-import java.nio.file.StandardWatchEventKinds
 
 class MainActivity : BaseActivity() {
 
@@ -30,7 +29,8 @@ class MainActivity : BaseActivity() {
 
         var Check_Num = 0
         val flash = FlashActivity(mContext)
-        val colorPickerDialog = ColorPickerDialog.createColorPickerDialog(mContext, R.style.CustomColorPicker)
+        val colorPickerDialog = ColorPickerDialog.createColorPickerDialog(mContext, ColorPickerDialog.DARK_THEME)
+        var colorPick = 0
 
         btnNav.setOnNavigationItemSelectedListener {
             when (it.itemId){
@@ -62,9 +62,16 @@ class MainActivity : BaseActivity() {
 
         }
 
+        colorPickerDialog.setOnColorPickedListener { color, hexVal ->
+            colorPick = Color.parseColor(hexVal)
+            Toast.makeText(mContext, hexVal, Toast.LENGTH_SHORT).show()
+            starBtn.setColorFilter(colorPick)
+        }
         // Flash
         starBtn.setOnClickListener {
             val intent = Intent(mContext, ScreenLightActivity::class.java)
+            intent.putExtra("colorPick", colorPick)
+            startActivity(intent)
         }// starBtn
 
         /*
@@ -78,5 +85,6 @@ class MainActivity : BaseActivity() {
     }// setupEvents
 
     override fun setupValues() {
+
     }
 }

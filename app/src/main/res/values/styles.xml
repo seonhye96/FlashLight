@@ -7,13 +7,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CustomColorPicker" parent="ColorPicker">
-        <item name="cp_backgroundColor">@color/colorPrimary</item>
-        <item name="cp_hexaDecimalTextColor">#fff</item>
-        <item name="cp_colorComponentsTextColor">#fff</item>
-        <item name="cp_positiveActionTextColor">@color/colorWhite</item>
-        <item name="cp_negativeActionTextColor">@color/colorGray</item>
-        <item name="cp_sliderThumbColor">#accc</item>
-    </style>
-
 </resources>
