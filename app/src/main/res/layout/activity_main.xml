@@ -4,59 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.naesseuapp.flashlight.MainActivity"
-    android:background="@color/colorBlack">
+    tools:context="com.naesseuapp.flashlight.MainActivity">
 
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2">
-    </LinearLayout>
+        android:layout_height="575dp"
+        android:layout_weight="2"/>
+
+    <ImageButton
+        android:id="@+id/starBtn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="top|center"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/star"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/starBtn"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/starBright"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@drawable/star1"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="bottom">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/kidTimerLti"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                app:lottie_fileName="kid_timer.json"
-                app:lottie_loop="false"
-                app:lottie_autoPlay="true"/>
-
-
-        </LinearLayout>
-
-
-
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="star_act.json"
+            app:lottie_loop="true" />
     </LinearLayout>
 
 
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/btnNav"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:elevation="2dp"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@color/selector_nav_item"
+        app:itemTextColor="@color/selector_nav_item"
+        app:menu="@menu/menu_botton_navigation" />
 </LinearLayout>

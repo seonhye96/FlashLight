@@ -1,12 +1,11 @@
 package com.naesseuapp.flashlight
 
-import android.content.Context
 import android.os.Bundle
 
-class TimeActivity : BaseActivity() {
+class ScreenLightActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_time)
+        setContentView(R.layout.activity_screen_light)
 
         setupEvents()
         setupValues()
