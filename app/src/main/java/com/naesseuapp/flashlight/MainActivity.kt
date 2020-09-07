@@ -65,6 +65,7 @@ class MainActivity : BaseActivity() {
         colorPickerDialog.setOnColorPickedListener { color, hexVal ->
             colorPick = Color.parseColor(hexVal)
             starBtn.setColorFilter(colorPick)
+            //starBtn.background.setColorFilter(colorPick)
         }
         // Flash
         starBtn.setOnClickListener {
