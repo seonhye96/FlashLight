@@ -6,18 +6,25 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.provider.Settings
 import android.view.Window
 import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_screen_light.*
 
 class ScreenLightActivity : BaseActivity() {
 
+    lateinit var params : WindowManager.LayoutParams
+    var bright : Float = 0.0F
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_screen_light)
+
+        params = window.attributes
 
         val brightness = brightness
         seekBarScr.progress = brightness
@@ -25,10 +32,28 @@ class ScreenLightActivity : BaseActivity() {
         setupEvents()
         setupValues()
 
+
+    }
+    override fun onResume() {
+        super.onResume()
+
+        //기존밝기 저장
+        bright = params.screenBrightness
+        //최대밝기로 설정
+        params.screenBrightness = 1f
+        //밝기 설정 적용
+        window.attributes = params
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        //기존 밝기로 변경
+        params.screenBrightness = bright
+        window.attributes = params
     }
 
     override fun setupEvents() {
-        //val seekBar :SeekBar = findViewById(R.id.seekBarScr)
 
         if (!canWite){
             seekBarScr.isEnabled = false
@@ -40,6 +65,8 @@ class ScreenLightActivity : BaseActivity() {
                 // seekbar 를 조작하고 있는 중 작동
                 if (canWite){
                     setBrightness(i)
+                    params.screenBrightness = i/100.0f
+                    window.attributes = params
                 }
 
             }
@@ -55,7 +82,9 @@ class ScreenLightActivity : BaseActivity() {
             }
 
         })
+
     }
+
 
     override fun setupValues() {
 
@@ -63,8 +92,6 @@ class ScreenLightActivity : BaseActivity() {
         screenAct.setBackgroundColor(colorPick)
     }
 
-
-    // Extension property to get write system settings permission status
     val Context.canWite:Boolean
     get() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -102,20 +129,5 @@ class ScreenLightActivity : BaseActivity() {
             value
         )
     }
-
-
-
-    /*
-    private fun setBrightness(value : Int) {
-        var num = 0
-        if (value < 10) {
-            num = 10
-        }else if (value > 100) {
-            num = 100
-        }
-        params.screenBrightness = (num / 100).toFloat()
-        window.attributes = params
-    }
-    */
 
 }

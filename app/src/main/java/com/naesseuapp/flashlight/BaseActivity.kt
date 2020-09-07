@@ -1,5 +1,6 @@
 package com.naesseuapp.flashlight
 
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -8,5 +9,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun setupEvents()
     abstract fun setupValues()
+
+    fun makeToast(msg : String){
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show()
+    }
 
 }

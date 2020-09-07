@@ -64,7 +64,6 @@ class MainActivity : BaseActivity() {
 
         colorPickerDialog.setOnColorPickedListener { color, hexVal ->
             colorPick = Color.parseColor(hexVal)
-            Toast.makeText(mContext, hexVal, Toast.LENGTH_SHORT).show()
             starBtn.setColorFilter(colorPick)
         }
         // Flash
