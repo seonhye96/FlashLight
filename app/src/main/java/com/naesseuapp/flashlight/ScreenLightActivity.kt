@@ -8,17 +8,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.provider.Settings
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_screen_light.*
 
 class ScreenLightActivity : BaseActivity() {
 
     lateinit var params : WindowManager.LayoutParams
     var bright : Float = 0.0F
+    var seek = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,18 +76,26 @@ class ScreenLightActivity : BaseActivity() {
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
                 // seekBar 를 조작하기 시작했을 때 작동
-
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 // seekBar 조작을 마무리했을 때 작동
-
             }
 
         })
 
-    }
+        seekBarImg.setOnClickListener {
+            if (seek.equals(0)){
+                seekBarScr.visibility = View.VISIBLE
+                seek = 1
+            }else{
+                seekBarScr.visibility = View.GONE
+                seek = 0
+            }
 
+        }
+
+    }
 
     override fun setupValues() {
 

@@ -15,14 +15,17 @@
         android:gravity="center">
 
         <ImageView
+            android:id="@+id/seekBarImg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/sunny"/>
 
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/seekBarScr"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:visibility="gone"
             android:max="100"
             android:progress="10"/>
 
