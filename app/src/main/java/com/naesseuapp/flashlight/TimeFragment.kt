@@ -1,6 +1,5 @@
 package com.naesseuapp.flashlight
 
-import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -8,27 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import androidx.core.os.bundleOf
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.time_fragment.*
 import kotlinx.android.synthetic.main.time_fragment.view.*
 import java.util.*
-import kotlinx.android.synthetic.main.activity_timer.hNumberPiker
-import kotlinx.android.synthetic.main.activity_timer.mNumberPiker
-import kotlinx.android.synthetic.main.activity_timer.resetBtn
-import kotlinx.android.synthetic.main.activity_timer.sNumberPiker
-import kotlinx.android.synthetic.main.activity_timer.startBtn
-import kotlinx.android.synthetic.main.time_fragment.*
-import kotlinx.coroutines.NonCancellable.cancel
-import kotlinx.coroutines.NonCancellable.start
-import kotlinx.coroutines.delay
-import java.lang.IllegalStateException
 
-class TimeFragment : DialogFragment(), View.OnClickListener{
+
+class TimeFragment : DialogFragment(){
 
     var timeSelected = ""
     var timeLeftFormatted = ""
     var timer: CountDownTimer? = null
+    var isRunning = true
 
     var fragment = this
     var bundle = Bundle()
@@ -46,23 +37,46 @@ class TimeFragment : DialogFragment(), View.OnClickListener{
     ): View? {
         val view = inflater.inflate(R.layout.time_fragment, container, false)
 
+        isRunning = (activity as MainActivity).isRunning    //arguments!!.getBoolean("timerRunning")
+        Log.d("timerRunning", "timerRunning : ${(activity as MainActivity).isRunning}")
+
+        Log.d("startAABtn", "startAABtn : ${startAABtn}")
+
+
+
+        if(isRunning == true){
+            view.startAABtn.isEnabled = false
+            view.resetAABtn.isEnabled = true
+        }
+
         view.startAABtn.setOnClickListener {
             checkNumber()
             countDown(timeSelected)
 
-            //startBtn.visibility = View.GONE
-            // resetAABtn.visibility = View.VISIBLE
+            if(isRunning == true){
+                view.startAABtn.isEnabled = false
+                view.resetAABtn.isEnabled = true
+            }
 
-
-            dismiss()
+            //dismiss()
         }
 
         view.resetAABtn.setOnClickListener {
 
-            //startBtn.visibility = View.VISIBLE
-            //resetAABtn.visibility = View.INVISIBLE
+            startAABtn.isEnabled = true
+            resetAABtn.isEnabled = false
+
+            try {
+                (activity as MainActivity)?.getTimer()
+                (activity as ScreenLightActivity)?.getTimer()
+            } catch (e: Exception) {
+            }
+
+
+            (activity as MainActivity)?.isRunning = false
 
             timer?.cancel()
+
         }
 
         view.cancelAABtn.setOnClickListener {
@@ -125,66 +139,62 @@ class TimeFragment : DialogFragment(), View.OnClickListener{
     }
 
     private fun countDown(time : String){
+        if (timeSelected == "000000"){
+            Toast.makeText(context, "시간을 선택해주세요.", Toast.LENGTH_SHORT).show()
+        }else{
+            Log.d("timeSelected", "timeSelected : ${timeSelected}")
 
-        Log.d("timeSelected", "timeSelected : ${timeSelected}")
+            var conversionTime = 0
+            var getHour = time.substring(0, 2)
+            var getMin = time.substring(2, 4)
+            var getSecond = time.substring(4, 6)
 
-        var conversionTime = 0
-        var getHour = time.substring(0, 2)
-        var getMin = time.substring(2, 4)
-        var getSecond = time.substring(4, 6)
+            if (getHour.substring(0, 1) == "0") {
+                getHour = getHour.substring(1, 2);
+            }
 
-        if (getHour.substring(0, 1) == "0") {
-            getHour = getHour.substring(1, 2);
-        }
+            if (getMin.substring(0, 1) == "0") {
+                getMin = getMin.substring(1, 2);
+            }
 
-        if (getMin.substring(0, 1) == "0") {
-            getMin = getMin.substring(1, 2);
-        }
+            if (getSecond.substring(0, 1) == "0") {
+                getSecond = getSecond.substring(1, 2);
+            }
 
-        if (getSecond.substring(0, 1) == "0") {
-            getSecond = getSecond.substring(1, 2);
-        }
+            conversionTime =
+                (getHour.toLong() * 1000 * 3600 + getMin.toLong() * 60 * 1000 + getSecond.toLong() * 1000).toInt();
 
-        conversionTime =
-            (getHour.toLong() * 1000 * 3600 + getMin.toLong() * 60 * 1000 + getSecond.toLong() * 1000).toInt();
+            timer = object : CountDownTimer(conversionTime.toLong(), 1000){
 
-        timer = object : CountDownTimer(conversionTime.toLong(), 1000){
+                override fun onTick(millisUntilFinished: Long) {
+                    var hour = (millisUntilFinished / (60*60*1000))
+                    val getMin = millisUntilFinished - (millisUntilFinished/(60*60*1000))
+                    var min = (getMin / (60*1000))
+                    var second = ((getMin % (60*1000)) / 1000)
 
-            override fun onTick(millisUntilFinished: Long) {
-                var hour = (millisUntilFinished / (60*60*1000))
+                    timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, min, second)
 
-                val getMin = millisUntilFinished - (millisUntilFinished/(60*60*1000))
-                var min = (getMin / (60*1000))
+                    bundle.putString("TIMER", timeLeftFormatted)
+                    Log.d("bundle", "bundle : ${bundle}")
+                    fragment.arguments = bundle
 
-                var second = ((getMin % (60*1000)) / 1000)
-
-
-                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, min, second)
-
-                bundle.putString("TIMER", timeLeftFormatted)
-                Log.d("bundle", "bundle : ${bundle}")
-                fragment.arguments = bundle
-
-
-                try {
-                    (activity as MainActivity)?.getTimer()
-                } catch (e: Exception) {
+                    isRunning = true
+                    try {
+                        (activity as MainActivity)?.getTimer()
+                        (activity as ScreenLightActivity)?.getTimer()
+                    } catch (e: Exception) {
+                    }
                 }
+                override fun onFinish() {
+                    isRunning = false
 
-            }
+                    (activity as BaseActivity)!!.stopApp()
 
-            override fun onFinish() {
-                //startBtn.isEnabled = true
-                //resetAABtn.isEnabled = false
-            }
+                }
+            }.start()
 
-        }.start()
+            (activity as MainActivity).isRunningTimer()
+        }
     }
-
-    override fun onClick(p0: View?) {
-        dismiss()
-    }
-
-
 
 }

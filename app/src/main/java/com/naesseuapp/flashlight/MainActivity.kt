@@ -8,18 +8,14 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.core.graphics.BlendModeCompat
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import com.azeesoft.lib.colorpicker.ColorPickerDialog
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_screen_light.*
-import kotlinx.android.synthetic.main.activity_timer.*
 
 class MainActivity : BaseActivity() {
 
     var dialog = TimeFragment()
     var isRunning = false
+    var data = ""
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +26,8 @@ class MainActivity : BaseActivity() {
         setupValues()
 
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setupEvents() {
@@ -68,7 +66,14 @@ class MainActivity : BaseActivity() {
                 }
                 R.id.timeMenu -> {
                     Log.d("ckeck", "ckeck")
+
+                    var args = Bundle()
+                    args.putBoolean("isRunning", isRunning)
+                    dialog.arguments = args
+                    Log.d("timerRunning", "Main timerRunning : ${isRunning}")
+
                     dialog.show(supportFragmentManager, "tag")
+
                     true
                 }
                 else -> false
@@ -85,6 +90,9 @@ class MainActivity : BaseActivity() {
         starBtn.setOnClickListener {
             val intent = Intent(mContext, ScreenLightActivity::class.java)
             intent.putExtra("colorPick", colorPick)
+            if(data != "") {
+                intent.putExtra("data", data)
+            }
             startActivity(intent)
         }// starBtn
 
@@ -95,9 +103,14 @@ class MainActivity : BaseActivity() {
 
     }
 
+    fun isRunningTimer(){
+        isRunning = true
+    }
+
     fun getTimer(){
-        var data = dialog.arguments?.getString("TIMER")!!
-        if (data != null) {
+        data = dialog.arguments?.getString("TIMER")!!
+        if (data != null || data != "") {
+            MainTimeGoingTxt.visibility = View.VISIBLE
             MainTimeGoingTxt.text = data
         }
         Log.d("ARG", "ARG : ${dialog.arguments?.getString("TIMER")}")

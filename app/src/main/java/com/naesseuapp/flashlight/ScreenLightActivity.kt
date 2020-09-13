@@ -7,7 +7,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.os.SystemClock
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -24,6 +26,9 @@ class ScreenLightActivity : BaseActivity() {
     var bright : Float = 0.0F
     var seek = 0
 
+    var dialog = TimeFragment()
+    var isRunning = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_screen_light)
@@ -35,8 +40,6 @@ class ScreenLightActivity : BaseActivity() {
 
         setupEvents()
         setupValues()
-
-
     }
     override fun onResume() {
         super.onResume()
@@ -141,6 +144,32 @@ class ScreenLightActivity : BaseActivity() {
             Settings.System.SCREEN_BRIGHTNESS,
             value
         )
+    }
+
+    fun getTimer(){
+        var data = dialog.arguments?.getString("TIMER")!!
+        if (data != null) {
+            //ScreenTimeGoingTxt.visibility = View.VISIBLE
+            ScreenTimeGoingTxt.text = data
+        }
+
+        isRunning = true
+        var thread = ThreadClass()
+        thread.start()
+    }
+
+    inner class ThreadClass : Thread(){
+        override fun run() {
+            while (isRunning){
+                SystemClock.sleep(100)
+                var time = System.currentTimeMillis()
+                Log.d("test1", "쓰레드 : ${time}")
+
+                runOnUiThread {
+                    ScreenTimeGoingTxt.text = dialog.arguments?.getString("TIMER")
+                }
+            }
+        }
     }
 
 }
