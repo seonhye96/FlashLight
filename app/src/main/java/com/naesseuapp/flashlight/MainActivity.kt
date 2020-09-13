@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_timer.*
 class MainActivity : BaseActivity() {
 
     var dialog = TimeFragment()
+    var isRunning = false
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,35 +92,32 @@ class MainActivity : BaseActivity() {
     }// setupEvents
 
     override fun setupValues() {
-        var data = dialog.arguments?.getString("TIMER")
+
+    }
+
+    fun getTimer(){
+        var data = dialog.arguments?.getString("TIMER")!!
         if (data != null) {
             MainTimeGoingTxt.text = data
         }
         Log.d("ARG", "ARG : ${dialog.arguments?.getString("TIMER")}")
 
+        isRunning = true
+        var thread = ThreadClass()
+        thread.start()
     }
+    inner class ThreadClass : Thread(){
+        override fun run() {
+            while (isRunning){
+                SystemClock.sleep(100)
+                var time = System.currentTimeMillis()
+                Log.d("test1", "쓰레드 : ${time}")
 
-
-    /*
-    fun timePicker() {
-        val builder = AlertDialog.Builder(mContext)
-        val dialogView = layoutInflater.inflate(R.layout.time_picker_layout, null)
-
-        val dialogTime = dialogView.findViewById<TextView>(R.id.selectTimeTxt)
-
-
-
-        builder.setView(dialogView)
-            .setPositiveButton("실행") { dialogInterface, i ->
-
-                MainTimeGoingTxt.text = dialogTime.text
-                MainTimeGoingTxt.visibility = View.VISIBLE
-
-                ScreenTimeGoingTxt.text = dialogTime.text
-                ScreenTimeGoingTxt.visibility = View.VISIBLE
+                runOnUiThread {
+                   MainTimeGoingTxt.text = dialog.arguments?.getString("TIMER")
+                }
             }
-            .setNegativeButton("취소") { dialogInterface, i ->
-            }.show()
+        }
     }
-     */
+
 }

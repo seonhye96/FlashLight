@@ -1,5 +1,6 @@
 package com.naesseuapp.flashlight
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -49,11 +50,11 @@ class TimeFragment : DialogFragment(), View.OnClickListener{
             checkNumber()
             countDown(timeSelected)
 
-            //startBtn.visibility = View.INVISIBLE
+            //startBtn.visibility = View.GONE
             // resetAABtn.visibility = View.VISIBLE
 
 
-            //dismiss()
+            dismiss()
         }
 
         view.resetAABtn.setOnClickListener {
@@ -159,21 +160,22 @@ class TimeFragment : DialogFragment(), View.OnClickListener{
 
 
                 timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, min, second)
-                //MainTimeGoingTxt.text = timeLeftFormatted
-//                TimeAATxt.text = timeLeftFormatted
 
-                //Log.d("timeSelected", "timeLeftFormatted : ${timeLeftFormatted}")
                 bundle.putString("TIMER", timeLeftFormatted)
                 Log.d("bundle", "bundle : ${bundle}")
                 fragment.arguments = bundle
+
+
+                try {
+                    (activity as MainActivity)?.getTimer()
+                } catch (e: Exception) {
+                }
 
             }
 
             override fun onFinish() {
                 //startBtn.isEnabled = true
                 //resetAABtn.isEnabled = false
-
-                Log.d("fin", "fin")
             }
 
         }.start()
@@ -182,6 +184,7 @@ class TimeFragment : DialogFragment(), View.OnClickListener{
     override fun onClick(p0: View?) {
         dismiss()
     }
+
 
 
 }
