@@ -15,6 +15,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.core.view.isVisible
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_screen_light.*
 
 class ScreenLightActivity : BaseActivity() {
@@ -101,6 +102,7 @@ class ScreenLightActivity : BaseActivity() {
 
         var colorPick = intent.getIntExtra("colorPick", 0)
         screenAct.setBackgroundColor(colorPick)
+
     }
 
     val Context.canWite:Boolean
