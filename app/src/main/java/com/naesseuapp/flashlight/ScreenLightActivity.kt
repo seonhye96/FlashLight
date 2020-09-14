@@ -4,10 +4,7 @@ import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.PersistableBundle
-import android.os.SystemClock
+import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -19,6 +16,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_screen_light.*
+import java.util.*
 
 class ScreenLightActivity : BaseActivity() {
 
@@ -30,6 +28,7 @@ class ScreenLightActivity : BaseActivity() {
     var isRunning = false
 
     var timer = ""
+    var time: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,18 +108,8 @@ class ScreenLightActivity : BaseActivity() {
     override fun setupValues() {
 
         var colorPick = intent.getIntExtra("colorPick", 0)
-        timer = intent.getIntExtra("timer", 0).toString()
-
-        makeToast(timer)
 
         screenAct.setBackgroundColor(colorPick)
-        if (this.timer != "0"){
-            //ScreenTimeGoingTxt.text = timer.toString()
-            isRunning = true
-            var thread = ThreadClass()
-            thread.start()
-        }
-
     }
 
     val Context.canWite:Boolean
@@ -160,32 +149,5 @@ class ScreenLightActivity : BaseActivity() {
             value
         )
     }
-
-    fun getTimer(){
-        var data = dialog.arguments?.getString("TIMER")!!
-        if (data != null) {
-            //ScreenTimeGoingTxt.visibility = View.VISIBLE
-            ScreenTimeGoingTxt.text = data
-        }
-
-
-    }
-
-    inner class ThreadClass : Thread(){
-        override fun run() {
-            while (isRunning){
-                SystemClock.sleep(100)
-                var time = System.currentTimeMillis()
-                Log.d("test1", "쓰레드 : ${time}")
-
-                runOnUiThread {
-                    ScreenTimeGoingTxt.text = timer
-                }
-            }
-            ScreenTimeGoingTxt.text = ""
-        }
-    }
-
-
 
 }

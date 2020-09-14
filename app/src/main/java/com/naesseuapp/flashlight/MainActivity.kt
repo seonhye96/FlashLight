@@ -17,6 +17,8 @@ class MainActivity : BaseActivity() {
     var dialog = TimeFragment()
     var isRunning = false
     var data = ""
+    var fragment = this
+    var bundle = Bundle()
 
     var thread = ThreadClass()
 
@@ -91,9 +93,10 @@ class MainActivity : BaseActivity() {
         starBtn.setOnClickListener {
             val intent = Intent(mContext, ScreenLightActivity::class.java)
             intent.putExtra("colorPick", colorPick)
-            if(dialog.arguments?.getString("TIMER") != null) {
-                intent.putExtra("timer", dialog.arguments?.getString("TIMER"))
-            }
+            /*if(dialog.arguments?.getString("TIMER") != null) {
+                intent.putExtra("timer", data)
+                Log.d("타이머", dialog.arguments?.getString("TIMER")!!)
+            }*/
             startActivity(intent)
         }// starBtn
 

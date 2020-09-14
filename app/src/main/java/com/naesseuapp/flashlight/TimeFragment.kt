@@ -163,7 +163,6 @@ class TimeFragment : DialogFragment(){
                     isRunning = true
                     try {
                         (activity as MainActivity)?.getTimer()
-                        (activity as ScreenLightActivity)?.getTimer()
                     } catch (e: Exception) {
                     }
                 }

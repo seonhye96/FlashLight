@@ -25,7 +25,7 @@
             android:shadowDx="5.0"
             android:shadowDy="5.0"
             android:shadowRadius="5.0"
-            android:text="시간"
+            android:text=""
             android:textColor="@color/colorWhite"
             android:textSize="20sp" />
 
