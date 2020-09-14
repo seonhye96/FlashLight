@@ -29,9 +29,13 @@ class ScreenLightActivity : BaseActivity() {
     var dialog = TimeFragment()
     var isRunning = false
 
+    var timer = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_screen_light)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         params = window.attributes
 
@@ -41,6 +45,7 @@ class ScreenLightActivity : BaseActivity() {
         setupEvents()
         setupValues()
     }
+
     override fun onResume() {
         super.onResume()
 
@@ -104,7 +109,17 @@ class ScreenLightActivity : BaseActivity() {
     override fun setupValues() {
 
         var colorPick = intent.getIntExtra("colorPick", 0)
+        timer = intent.getIntExtra("timer", 0).toString()
+
+        makeToast(timer)
+
         screenAct.setBackgroundColor(colorPick)
+        if (this.timer != "0"){
+            //ScreenTimeGoingTxt.text = timer.toString()
+            isRunning = true
+            var thread = ThreadClass()
+            thread.start()
+        }
 
     }
 
@@ -153,9 +168,7 @@ class ScreenLightActivity : BaseActivity() {
             ScreenTimeGoingTxt.text = data
         }
 
-        isRunning = true
-        var thread = ThreadClass()
-        thread.start()
+
     }
 
     inner class ThreadClass : Thread(){
@@ -166,10 +179,13 @@ class ScreenLightActivity : BaseActivity() {
                 Log.d("test1", "쓰레드 : ${time}")
 
                 runOnUiThread {
-                    ScreenTimeGoingTxt.text = dialog.arguments?.getString("TIMER")
+                    ScreenTimeGoingTxt.text = timer
                 }
             }
+            ScreenTimeGoingTxt.text = ""
         }
     }
+
+
 
 }

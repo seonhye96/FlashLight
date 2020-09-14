@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.azeesoft.lib.colorpicker.ColorPickerDialog
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +17,8 @@ class MainActivity : BaseActivity() {
     var dialog = TimeFragment()
     var isRunning = false
     var data = ""
+
+    var thread = ThreadClass()
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,12 +68,10 @@ class MainActivity : BaseActivity() {
                     true
                 }
                 R.id.timeMenu -> {
-                    Log.d("ckeck", "ckeck")
 
                     var args = Bundle()
                     args.putBoolean("isRunning", isRunning)
                     dialog.arguments = args
-                    Log.d("timerRunning", "Main timerRunning : ${isRunning}")
 
                     dialog.show(supportFragmentManager, "tag")
 
@@ -90,8 +91,8 @@ class MainActivity : BaseActivity() {
         starBtn.setOnClickListener {
             val intent = Intent(mContext, ScreenLightActivity::class.java)
             intent.putExtra("colorPick", colorPick)
-            if(data != "") {
-                intent.putExtra("data", data)
+            if(dialog.arguments?.getString("TIMER") != null) {
+                intent.putExtra("timer", dialog.arguments?.getString("TIMER"))
             }
             startActivity(intent)
         }// starBtn
@@ -106,6 +107,10 @@ class MainActivity : BaseActivity() {
     fun isRunningTimer(){
         isRunning = true
     }
+    fun isResetTimer(){
+        isRunning = false
+        data = ""
+    }
 
     fun getTimer(){
         data = dialog.arguments?.getString("TIMER")!!
@@ -113,21 +118,19 @@ class MainActivity : BaseActivity() {
             MainTimeGoingTxt.visibility = View.VISIBLE
             MainTimeGoingTxt.text = data
         }
-        Log.d("ARG", "ARG : ${dialog.arguments?.getString("TIMER")}")
 
         isRunning = true
-        var thread = ThreadClass()
         thread.start()
     }
+
     inner class ThreadClass : Thread(){
         override fun run() {
             while (isRunning){
                 SystemClock.sleep(100)
                 var time = System.currentTimeMillis()
-                Log.d("test1", "쓰레드 : ${time}")
 
                 runOnUiThread {
-                   MainTimeGoingTxt.text = dialog.arguments?.getString("TIMER")
+                   MainTimeGoingTxt.text = data
                 }
             }
         }

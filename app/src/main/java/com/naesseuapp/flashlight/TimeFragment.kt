@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.time_fragment.*
 import kotlinx.android.synthetic.main.time_fragment.view.*
 import java.util.*
@@ -38,11 +39,6 @@ class TimeFragment : DialogFragment(){
         val view = inflater.inflate(R.layout.time_fragment, container, false)
 
         isRunning = (activity as MainActivity).isRunning    //arguments!!.getBoolean("timerRunning")
-        Log.d("timerRunning", "timerRunning : ${(activity as MainActivity).isRunning}")
-
-        Log.d("startAABtn", "startAABtn : ${startAABtn}")
-
-
 
         if(isRunning == true){
             view.startAABtn.isEnabled = false
@@ -53,12 +49,10 @@ class TimeFragment : DialogFragment(){
             checkNumber()
             countDown(timeSelected)
 
-            if(isRunning == true){
-                view.startAABtn.isEnabled = false
-                view.resetAABtn.isEnabled = true
-            }
+            view.startAABtn.isEnabled = false
+            view.resetAABtn.isEnabled = true
 
-            //dismiss()
+            dismiss()
         }
 
         view.resetAABtn.setOnClickListener {
@@ -66,23 +60,14 @@ class TimeFragment : DialogFragment(){
             startAABtn.isEnabled = true
             resetAABtn.isEnabled = false
 
-            try {
-                (activity as MainActivity)?.getTimer()
-                (activity as ScreenLightActivity)?.getTimer()
-            } catch (e: Exception) {
-            }
-
-
-            (activity as MainActivity)?.isRunning = false
+            (activity as MainActivity)?.isResetTimer()
 
             timer?.cancel()
-
         }
 
         view.cancelAABtn.setOnClickListener {
             dismiss()
         }
-
         return view
     }
 
@@ -142,8 +127,6 @@ class TimeFragment : DialogFragment(){
         if (timeSelected == "000000"){
             Toast.makeText(context, "시간을 선택해주세요.", Toast.LENGTH_SHORT).show()
         }else{
-            Log.d("timeSelected", "timeSelected : ${timeSelected}")
-
             var conversionTime = 0
             var getHour = time.substring(0, 2)
             var getMin = time.substring(2, 4)
@@ -175,7 +158,6 @@ class TimeFragment : DialogFragment(){
                     timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, min, second)
 
                     bundle.putString("TIMER", timeLeftFormatted)
-                    Log.d("bundle", "bundle : ${bundle}")
                     fragment.arguments = bundle
 
                     isRunning = true
