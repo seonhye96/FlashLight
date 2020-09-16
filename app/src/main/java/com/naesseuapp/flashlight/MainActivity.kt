@@ -10,15 +10,19 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.azeesoft.lib.colorpicker.ColorPickerDialog
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
+    lateinit var mAdView : AdView
+
     var dialog = TimeFragment()
     var isRunning = false
     var data = ""
-    var fragment = this
-    var bundle = Bundle()
 
     var thread = ThreadClass()
 
@@ -26,6 +30,12 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this)
+
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         setupEvents()
         setupValues()
@@ -93,12 +103,24 @@ class MainActivity : BaseActivity() {
         starBtn.setOnClickListener {
             val intent = Intent(mContext, ScreenLightActivity::class.java)
             intent.putExtra("colorPick", colorPick)
-            /*if(dialog.arguments?.getString("TIMER") != null) {
-                intent.putExtra("timer", data)
-                Log.d("타이머", dialog.arguments?.getString("TIMER")!!)
-            }*/
+
             startActivity(intent)
         }// starBtn
+        //애드몹
+        mAdView.adListener = object : AdListener(){
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                //광고 문제없이 로드시 출력
+                Log.d("@@@", "onAdLoaded")
+            }
+
+            override fun onAdFailedToLoad(p0: Int) {
+                super.onAdFailedToLoad(p0)
+                //광고 로드에 문제가 있을시 출력
+                Log.d("@@@", "onAdFailedToLoad : "+ p0)
+            }
+        }
+
 
 
     }// setupEvents

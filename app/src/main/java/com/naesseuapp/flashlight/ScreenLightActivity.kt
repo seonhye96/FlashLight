@@ -1,6 +1,5 @@
 package com.naesseuapp.flashlight
 
-import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,31 +7,29 @@ import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.Toast
-import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import kotlinx.android.synthetic.main.activity_screen_light.*
-import java.util.*
 
 class ScreenLightActivity : BaseActivity() {
+
+    lateinit var mAdView : AdView
 
     lateinit var params : WindowManager.LayoutParams
     var bright : Float = 0.0F
     var seek = 0
 
-    var dialog = TimeFragment()
-    var isRunning = false
-
-    var timer = ""
-    var time: CountDownTimer? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_screen_light)
+
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -101,6 +98,21 @@ class ScreenLightActivity : BaseActivity() {
                 seek = 0
             }
 
+        }
+
+        //애드몹
+        mAdView.adListener = object : AdListener(){
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                //광고 문제없이 로드시 출력
+                Log.d("@@@", "onAdLoaded")
+            }
+
+            override fun onAdFailedToLoad(p0: Int) {
+                super.onAdFailedToLoad(p0)
+                //광고 로드에 문제가 있을시 출력
+                Log.d("@@@", "onAdFailedToLoad : "+ p0)
+            }
         }
 
     }

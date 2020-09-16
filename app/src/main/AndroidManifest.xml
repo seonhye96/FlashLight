@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.naesseuapp.flashlight">
 
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -14,7 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".TimerActivity"/>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id"/>
+
         <activity android:name=".ScreenLightActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -25,6 +32,8 @@
         </activity>
         <service android:name=".UnCatchTaskService"
             android:stopWithTask="false"/>
+
+
     </application>
 
 </manifest>
