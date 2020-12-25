@@ -154,8 +154,10 @@ class MainActivity : BaseActivity() {
                 SystemClock.sleep(100)
                 var time = System.currentTimeMillis()
 
+                Log.d("TIMETHEAD :: ", "${time}")
+
                 runOnUiThread {
-                   MainTimeGoingTxt.text = data
+                   MainTimeGoingTxt.text = dialog.arguments?.getString("TIMER")!!
                 }
             }
         }

@@ -125,7 +125,7 @@ class TimeFragment : DialogFragment(){
 
     private fun countDown(time : String){
         if (timeSelected == "000000"){
-            Toast.makeText(context, "시간을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "시간을 입력해주세요.", Toast.LENGTH_SHORT).show()
         }else{
             var conversionTime = 0
             var getHour = time.substring(0, 2)
@@ -161,6 +161,8 @@ class TimeFragment : DialogFragment(){
                     fragment.arguments = bundle
 
                     isRunning = true
+
+                    Log.d("########## TIMEGOING : ", timeLeftFormatted)
                     try {
                         (activity as MainActivity)?.getTimer()
                     } catch (e: Exception) {
