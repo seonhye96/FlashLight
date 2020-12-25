@@ -14,6 +14,8 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.naesseuapp.flashlight.shared.App
+import com.naesseuapp.flashlight.shared.MySharedPreferences
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -21,7 +23,7 @@ class MainActivity : BaseActivity() {
     lateinit var mAdView : AdView
 
     var dialog = TimeFragment()
-    var isRunning = false
+    var isRunningMain = false
     var data = ""
 
     var thread = ThreadClass()
@@ -82,7 +84,7 @@ class MainActivity : BaseActivity() {
                 R.id.timeMenu -> {
 
                     var args = Bundle()
-                    args.putBoolean("isRunning", isRunning)
+                    args.putBoolean("isRunning", isRunningMain)
                     dialog.arguments = args
 
                     dialog.show(supportFragmentManager, "tag")
@@ -101,10 +103,15 @@ class MainActivity : BaseActivity() {
         }
         // Flash
         starBtn.setOnClickListener {
-            val intent = Intent(mContext, ScreenLightActivity::class.java)
-            intent.putExtra("colorPick", colorPick)
+            var intentScrean = Intent(mContext, ScreenLightActivity::class.java)
+            intentScrean.putExtra("colorPick", colorPick)
+            //TODO
+            intentScrean.putExtra("isRunningScrean", isRunningMain)
+            if(isRunningMain == true) {
+                intentScrean.putExtra("TIMEGOING", dialog.arguments?.getString("TIMER")!!)
+            }
 
-            startActivity(intent)
+            startActivity(intentScrean)
         }// starBtn
         //애드몹
         mAdView.adListener = object : AdListener(){
@@ -130,10 +137,10 @@ class MainActivity : BaseActivity() {
     }
 
     fun isRunningTimer(){
-        isRunning = true
+        isRunningMain = true
     }
     fun isResetTimer(){
-        isRunning = false
+        isRunningMain = false
         data = ""
     }
 
@@ -144,20 +151,22 @@ class MainActivity : BaseActivity() {
             MainTimeGoingTxt.text = data
         }
 
-        isRunning = true
+        isRunningMain = true
         thread.start()
     }
 
     inner class ThreadClass : Thread(){
         override fun run() {
-            while (isRunning){
+            while (isRunningMain){
                 SystemClock.sleep(100)
                 var time = System.currentTimeMillis()
 
-                Log.d("TIMETHEAD :: ", "${time}")
-
                 runOnUiThread {
-                   MainTimeGoingTxt.text = dialog.arguments?.getString("TIMER")!!
+                    var data = dialog.arguments?.getString("TIMER")!!
+                    //pref.getString("timer", data)
+                    MainTimeGoingTxt.text = data
+                    //MySharedPreferences(mContext).prefs.edit().putString("timerMain", data)
+                    App.prefs.myEditText = data
                 }
             }
         }

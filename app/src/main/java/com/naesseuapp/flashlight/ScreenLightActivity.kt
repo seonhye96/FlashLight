@@ -10,9 +10,12 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.naesseuapp.flashlight.shared.App
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_screen_light.*
 
 class ScreenLightActivity : BaseActivity() {
@@ -22,6 +25,8 @@ class ScreenLightActivity : BaseActivity() {
     lateinit var params : WindowManager.LayoutParams
     var bright : Float = 0.0F
     var seek = 0
+
+    var isRunningScrean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,8 +125,14 @@ class ScreenLightActivity : BaseActivity() {
     override fun setupValues() {
 
         var colorPick = intent.getIntExtra("colorPick", 0)
-
         screenAct.setBackgroundColor(colorPick)
+
+        //TODO
+        isRunningScrean = intent.getBooleanExtra("isRunningScrean", false)
+        Log.d("isRunningScrean :: ", "${intent.getStringExtra("TIMEGOING")}")
+        if(isRunningScrean == true){
+            getTimerScrean()
+        }
     }
 
     val Context.canWite:Boolean
@@ -162,4 +173,29 @@ class ScreenLightActivity : BaseActivity() {
         )
     }
 
+    // TODO 타이머
+    fun  getTimerScrean(){
+        var data = intent.getStringExtra("TIMEGOING")!!
+        if (data != null || data != "") {
+            ScreenTimeGoingTxt.visibility = View.VISIBLE
+            ScreenTimeGoingTxt.text = data
+        }
+
+        isRunningScrean = true
+        ThreadClass().start()
+    }
+
+    inner class ThreadClass : Thread(){
+        override fun run() {
+            while (isRunningScrean){
+                SystemClock.sleep(100)
+                var time = System.currentTimeMillis()
+
+                runOnUiThread {
+                    ScreenTimeGoingTxt.text = App.prefs.myEditText.toString()
+                }
+            }
+        }
+    }
+    // ###############################
 }

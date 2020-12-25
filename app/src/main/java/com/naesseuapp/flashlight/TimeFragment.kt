@@ -1,5 +1,6 @@
 package com.naesseuapp.flashlight
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -38,12 +39,12 @@ class TimeFragment : DialogFragment(){
     ): View? {
         val view = inflater.inflate(R.layout.time_fragment, container, false)
 
-        isRunning = (activity as MainActivity).isRunning    //arguments!!.getBoolean("timerRunning")
+        isRunning = (activity as MainActivity).isRunningMain    //arguments!!.getBoolean("timerRunning")
 
         if(isRunning == true){
             view.startAABtn.isEnabled = false
             view.resetAABtn.isEnabled = true
-        }
+    }
 
         view.startAABtn.setOnClickListener {
             checkNumber()
@@ -162,17 +163,15 @@ class TimeFragment : DialogFragment(){
 
                     isRunning = true
 
-                    Log.d("########## TIMEGOING : ", timeLeftFormatted)
                     try {
+                        //TODO
                         (activity as MainActivity)?.getTimer()
                     } catch (e: Exception) {
                     }
                 }
                 override fun onFinish() {
                     isRunning = false
-
                     (activity as BaseActivity)!!.stopApp()
-
                 }
             }.start()
 
