@@ -1,5 +1,6 @@
 package com.naesseuapp.flashlight
 
+import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -171,7 +172,8 @@ class TimeFragment : DialogFragment(){
                 }
                 override fun onFinish() {
                     isRunning = false
-                    (activity as BaseActivity)!!.stopApp()
+                    bundle.putString("TIMER", "00:00:00")
+//                    (activity as BaseActivity)!!.stopApp()
                 }
             }.start()
 

@@ -15,10 +15,4 @@ abstract class BaseActivity : AppCompatActivity() {
     fun makeToast(msg : String){
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show()
     }
-
-    fun stopApp() {
-        startService(Intent(mContext, UnCatchTaskService::class.java))
-        startService(Intent(mContext, UnCatchTaskService::class.java))
-    }
-
 }

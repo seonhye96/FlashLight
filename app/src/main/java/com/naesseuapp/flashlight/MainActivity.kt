@@ -17,6 +17,7 @@ import com.google.android.gms.ads.MobileAds
 import com.naesseuapp.flashlight.shared.App
 import com.naesseuapp.flashlight.shared.MySharedPreferences
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_screen_light.*
 
 class MainActivity : BaseActivity() {
 
@@ -105,7 +106,7 @@ class MainActivity : BaseActivity() {
         starBtn.setOnClickListener {
             var intentScrean = Intent(mContext, ScreenLightActivity::class.java)
             intentScrean.putExtra("colorPick", colorPick)
-            //TODO
+
             intentScrean.putExtra("isRunningScrean", isRunningMain)
             if(isRunningMain == true) {
                 intentScrean.putExtra("TIMEGOING", dialog.arguments?.getString("TIMER")!!)
@@ -157,19 +158,21 @@ class MainActivity : BaseActivity() {
 
     inner class ThreadClass : Thread(){
         override fun run() {
+            //TODO
             while (isRunningMain){
                 SystemClock.sleep(100)
                 var time = System.currentTimeMillis()
 
                 runOnUiThread {
                     var data = dialog.arguments?.getString("TIMER")!!
-                    //pref.getString("timer", data)
                     MainTimeGoingTxt.text = data
-                    //MySharedPreferences(mContext).prefs.edit().putString("timerMain", data)
                     App.prefs.myEditText = data
+                    if(MainTimeGoingTxt.text.equals("00:00:00")){
+                        isRunningMain = false
+                        System.exit(0)
+                    }
                 }
             }
         }
     }
-
 }

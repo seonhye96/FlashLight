@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.naesseuapp.flashlight">
 
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -21,7 +19,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
+            android:value="@string/admob_app_id" />
 
         <activity android:name=".ScreenLightActivity" />
         <activity android:name=".MainActivity">
@@ -31,10 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".UnCatchTaskService"
-            android:stopWithTask="false"/>
 
-
+        <service
+            android:name=".UnCatchTaskService"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

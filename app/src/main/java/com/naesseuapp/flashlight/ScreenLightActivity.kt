@@ -193,6 +193,10 @@ class ScreenLightActivity : BaseActivity() {
 
                 runOnUiThread {
                     ScreenTimeGoingTxt.text = App.prefs.myEditText.toString()
+                    if(ScreenTimeGoingTxt.text.equals("00:00:00")){
+                        isRunningScrean = false
+                        System.exit(0)
+                    }
                 }
             }
         }
